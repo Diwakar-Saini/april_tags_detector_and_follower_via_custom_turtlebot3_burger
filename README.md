@@ -1,7 +1,8 @@
 # Autonomous AprilTag Navigation with PID Control and Future TEB Integration
 
 This package allows a robot (TurtleBot3 Burger) to autonomously detect AprilTags and move towards them using PID control. The system is designed to integrate with the TEB (Timed Elastic Band) planner for future enhancements in autonomous navigation. Currently, there is a quaternion error in the TEB planner due to a transformation issue, which will be corrected in future work.
-
+## DEMO VIDEO
+  [![Watch the demo](https://path/to/your/image.png)](https://drive.google.com/file/d/1XolpNXyXHvBhDsE9xbqjaliXJMMERF_x/view?usp=drive_link)
 ## Features
 - **AprilTag Detection:** Detects AprilTags in the environment and calculates the robot's pose with respect to the AprilTag.
 - **PID Control:** Uses a PID controller to move the robot towards the detected AprilTag.
