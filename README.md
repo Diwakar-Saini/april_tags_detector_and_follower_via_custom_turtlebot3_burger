@@ -49,8 +49,15 @@ This package allows a robot (TurtleBot3 Burger) to autonomously detect AprilTags
 
 ## Installation
 
-### Clone the Repository
+### Clone the Repository inside src folder
 ```bash
 git clone https://github.com/your-username/your-repository-name.git
 cd your-repository-name
+ ```
+### copy the models to  gazebo models
+- Navigate to the Custom_world/models enter this cmd.
+  ```bash
+     cp -r *cw .gazebo/models
+
+ ```
 
