@@ -58,6 +58,5 @@ cd your-repository-name
 - Navigate to the Custom_world/models enter this cmd.
   ```bash
      cp -r *cw .gazebo/models
-
- ```
+  ```
 
