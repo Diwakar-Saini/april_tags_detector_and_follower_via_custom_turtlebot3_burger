@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Arguments -->
+  <arg name="model" default="burger" doc="model type [burger, waffle, waffle_pi]"/>
+  <!-- <arg name="world_name" default="$(find custom_world)/worlds/new_demo_world.world"/> -->
+  <arg name="world_name" default="$(find custom_world)/worlds/warehouse_small.world"/>
+  <arg name="laser_visual" default="true"/>
+  <arg name="imu_visual" default="true"/>
+  <arg name="camera_visual" default="false"/>
+  <arg name="gpu" default="false"/>
+  <arg name="move_forward_only" default="false"/>
+
+  <!-- Start Gazebo with the specified world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)"/>
+  </include>
+
+  <arg name="bot_x_pos" default="-6.0"/>
+  <arg name="bot_y_pos" default="6.0"/>
+  <arg name="bot_z_pos" default="0.1"/>
+  <arg name="bot_yaw"   default="-1.97"/>
+
+  <!-- Robot Description (No namespace) -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro laser_visual:=$(arg laser_visual) imu_visual:=$(arg imu_visual) camera_visual:=$(arg camera_visual)" />
+
+  <!-- Spawn the bot (No namespace) -->
+  <node name="spawn_bot" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -model bot -x $(arg bot_x_pos) -y $(arg bot_y_pos) -z $(arg bot_z_pos) -Y $(arg bot_yaw) -param robot_description" />
+
+  <!-- Robot State Publisher (No namespace) -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" value="" /> <!-- Clear the tf prefix -->
+  </node>
+
+  <!-- AprilTag Continuous Detection (No namespace) -->
+  <include file="$(find apriltag_ros)/launch/continuous_detection.launch"/>
+
+  <!-- Camera TF Broadcaster (No namespace) -->
+  <node name="camera_tf_broadcaster" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 camera_link camera_rgb_optical_frame" />
+
+
+  <!-- Gmapping for Turtlebot (No namespace) -->
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <param name="base_frame" value="base_footprint"/> <!-- Remove the leading slash -->
+    <param name="odom_frame" value="odom"/>          <!-- Remove the leading slash -->
+    <param name="map_frame"  value="map"/>           <!-- Remove the leading slash -->
+  </node>
+
+  <!-- Load parameters for move_base -->
+  <rosparam file="$(find teb_local_planner)/cfg/move_base_params_bot.yaml" command="load" ns="move_base" />
+  <rosparam file="$(find teb_local_planner)/cfg/teb_local_planner_params_bot.yaml" command="load" ns="move_base" />
+
+  <node pkg="move_base" type="move_base" name="move_base" output="screen">
+    <param name="base_global_planner" value="navfn/NavfnROS" />
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+  </node>
+
+  <!-- Static transform broadcaster for map to merged map (No namespace) -->
+  <node pkg="tf" type="static_transform_publisher" name="map_to_mergedmap_tf_broadcaster"  args="0 0 0 0 0 0 world map 20"/>
+
+</launch>

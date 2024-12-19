@@ -1,0 +1,15 @@
+
+<launch>
+  
+ 
+    <rosparam file="$(find teb_local_planner)/cfg/move_base_params_bot.yaml" command="load" ns="move_base" />
+    <rosparam file="$(find teb_local_planner)/cfg/teb_local_planner_params_bot.yaml" command="load" ns="move_base" />
+
+    <node pkg="move_base" type="move_base" name="move_base" output="screen">
+      <param name="base_global_planner" value="navfn/NavfnROS" />
+      <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+    </node>
+
+
+  
+</launch>

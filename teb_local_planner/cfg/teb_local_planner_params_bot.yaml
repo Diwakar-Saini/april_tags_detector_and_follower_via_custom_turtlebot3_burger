@@ -1,0 +1,18 @@
+TEBPlannerROS:
+  odom_topic: "/odom"
+  cmd_vel_topic: "/cmd_vel"
+  map_frame: "map"
+  base_frame: "base_footprint"
+  max_vel_x: 0.5
+  min_vel_x: 0.1
+  max_vel_theta: 0.5
+  min_in_place_vel_theta: 0.3
+  acc_lim_x: 0.5
+  acc_lim_theta: 1.0
+  xy_goal_tolerance: 0.2
+  yaw_goal_tolerance: 0.1
+  min_obstacle_dist: 0.2
+  inflation_dist: 0.3
+  obstacle_poses_affected: 30
+  obstacles:
+    inflation_radius: 0.3
